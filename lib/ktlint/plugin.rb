@@ -1,3 +1,5 @@
+require 'json'
+
 module Danger
   class DangerKtlint < Plugin
     attr_accessor :filtering
@@ -7,6 +9,12 @@ module Danger
         fail("Couldn't find ktlint command. Install first.")
         return
       end
+
+      target = git.added_files + git.modified_files
+      return if target.empty?
+
+      result = JSON.parse(`ktlint #{target.join(' ')} --reporter=json`)
+      return if result.empty?
     end
 
     private
