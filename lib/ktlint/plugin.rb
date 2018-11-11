@@ -30,7 +30,7 @@ module Danger
     def send_markdown_comment(results)
       results.each {|result|
         result['errors'].each {|error|
-          markdown(file: result['file'], line: error['line'], message: error['message'])
+          fail(file: result['file'], line: error['line'], message: error['message'])
         }
       }
     end
