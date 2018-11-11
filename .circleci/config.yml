@@ -10,13 +10,18 @@ jobs:
             - v1-dependencies-{{ checksum "Gemfile.lock" }}
               # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      
+      - run:
+          name: Install Dependencies
+          command: |
+            bundle install --jobs=4 --path vendor/bundle
+      
+      - save_cache:
+          paths: 
+          - vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
       - run:
           name: Run RSpec
           command: |
-            bundle install --path vendor/bundle
             bundle exec rspec
-      - save_cache:
-        key: 
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
