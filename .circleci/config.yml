@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: ruby:2.5.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - bundle-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Run RSpec
+          command: |
+            bundle install --path vendor/bundle
+            bundle exec rspec
+      - save_cache:
+        key: 
+          - bundle-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
