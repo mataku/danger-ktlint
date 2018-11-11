@@ -30,7 +30,9 @@ module Danger
     def send_markdown_comment(results)
       results.each {|result|
         result['errors'].each {|error|
-          fail(file: result['file'], line: error['line'], message: error['message'])
+          file = "#{result['file']}#L#{error['line']}"
+          message = "#{github.html_link(file)} has linter issue: #{error['message']}"
+          fail(message)
         }
       }
     end
