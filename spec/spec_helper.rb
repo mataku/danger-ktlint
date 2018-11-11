@@ -63,3 +63,7 @@ def testing_dangerfile
   env = Danger::EnvironmentManager.new(testing_env)
   Danger::Dangerfile.new(env, testing_ui)
 end
+
+def dummy_ktlint_result
+  File.read(File.expand_path('../fixtures/ktlint_result.txt', __FILE__)).chomp
+end
