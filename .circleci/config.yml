@@ -7,7 +7,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - bundle-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+              # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
       - run:
           name: Run RSpec
           command: |
@@ -15,6 +17,6 @@ jobs:
             bundle exec rspec
       - save_cache:
         key: 
-          - bundle-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
         paths:
           - vendor/bundle
