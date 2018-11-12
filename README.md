@@ -1,15 +1,25 @@
 # danger-ktlint
 
-A description of danger-ktlint.
+Lint kotlin files using ktlint command lint interface.
 
 ## Installation
 
-    $ gem install danger-ktlint
+```ruby
+$ gem install danger-ktlint
+```
 
 ## Usage
 
-    Methods and attributes from this plugin are available in
-    your `Dangerfile` under the `ktlint` namespace.
+You need to install `ktlint` command first, see: https://ktlint.github.io/#getting-started.
+
+```ruby
+# Dangerfile
+ktlint.lint
+```
+
+## TODO
+
+- filtering: false (default: filtering: true behavior)
 
 ## Development
 

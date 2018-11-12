@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Ktlint::VERSION
   spec.authors       = ['mataku']
   spec.email         = ['nagomimatcha@gmail.com']
-  spec.description   = %q{A short description of danger-ktlint.}
-  spec.summary       = %q{A longer description of danger-ktlint.}
+  spec.description   = %q{Lint kotlin files using ktlint command line interface.}
+  spec.summary       = %q{Lint kotlin files using ktlint command line interface.}
   spec.homepage      = 'https://github.com/mataku/danger-ktlint'
   spec.license       = 'MIT'
 
