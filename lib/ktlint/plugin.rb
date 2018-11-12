@@ -10,7 +10,7 @@ module Danger
     # Skip lint task if files changed are empty
     # @return [void]
     # def lint(inline_mode: false)
-    def lint
+    def lint(inline_mode: false)
       unless ktlint_exists?
         fail("Couldn't find ktlint command. Install first.")
         return
@@ -22,10 +22,11 @@ module Danger
       results = JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
       return if results.empty?
 
-      # if inline_mode
-        # TODO: Send inline comment
-      # else
-      send_markdown_comment(results)
+      if inline_mode
+        send_inline_comments(results)
+      else
+        send_markdown_comment(results)
+      end
     end
 
     # Comment to a PR by ktlint result json
@@ -52,6 +53,17 @@ module Danger
           fail(message)
         }
       }
+    end
+
+    def send_inline_comments(results)
+      results.each do |result|
+        result['errors'].each do |error|
+          file = result['file']
+          message = error['message']
+          line = error['line']
+          fail(message, file: result['file'], line: line)
+        end
+      end
     end
 
     def target_files(changed_files)
