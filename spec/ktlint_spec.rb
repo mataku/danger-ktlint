@@ -38,6 +38,18 @@ module Danger
           expect(dangerfile.status_report[:errors].size).to eq(1)
         end
       end
+
+      context 'Ktlint issues were found with inline_mode: true' do
+        before do
+          allow_any_instance_of(Kernel).to receive(:system).with('which ktlint > /dev/null 2>&1').and_return(true)
+          allow_any_instance_of(Kernel).to receive(:`).with('ktlint app/src/main/java/com/mataku/Model.kt --reporter=json --relative').and_return(dummy_ktlint_result)
+        end
+
+        it 'Sends markdown comment' do
+          plugin.lint(inline_mode: true)
+          expect(dangerfile.status_report[:errors].size).to eq(1)
+        end
+      end
     end
   end
 end
