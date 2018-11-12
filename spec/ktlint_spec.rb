@@ -45,7 +45,7 @@ module Danger
           allow_any_instance_of(Kernel).to receive(:`).with('ktlint app/src/main/java/com/mataku/Model.kt --reporter=json --relative').and_return(dummy_ktlint_result)
         end
 
-        it 'Sends markdown comment' do
+        it 'Sends inline comment' do
           plugin.lint(inline_mode: true)
           expect(dangerfile.status_report[:errors].size).to eq(1)
         end
