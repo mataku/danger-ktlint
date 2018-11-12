@@ -10,7 +10,12 @@ $ gem install danger-ktlint
 
 ## Usage
 
-You need to install `ktlint` command first, see: https://ktlint.github.io/#getting-started.
+You need to install `ktlint` command and set as executable first, see: https://ktlint.github.io/#getting-started.
+
+```bash
+# Example
+$ curl --output /usr/local/bin/ktlint -sL https://github.com/shyiko/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/loca/bin/ktlint
+```
 
 ```ruby
 # Dangerfile
