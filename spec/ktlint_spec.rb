@@ -21,7 +21,7 @@ module Danger
         end
 
         it 'Fails with message about not found `ktlint`' do
-          plugin.lint(inline_mode: false)
+          plugin.lint
           expect(dangerfile.status_report[:errors]).to eq(["Couldn't find ktlint command. Install first."])
         end
       end
@@ -34,7 +34,7 @@ module Danger
         end
 
         it 'Sends markdown comment' do
-          plugin.lint(inline_mode: false)
+          plugin.lint
           expect(dangerfile.status_report[:errors].size).to eq(1)
         end
       end

@@ -2,13 +2,15 @@ require 'json'
 
 module Danger
   class DangerKtlint < Plugin
+    # TODO: Lint all files if `filtering: false`
     attr_accessor :filtering
 
     # Run ktlint task using command line interface
     # Will fail if `ktlint` is not installed
     # Skip lint task if files changed are empty
     # @return [void]
-    def lint(inline_mode: false)
+    # def lint(inline_mode: false)
+    def lint
       unless ktlint_exists?
         fail("Couldn't find ktlint command. Install first.")
         return
@@ -20,11 +22,10 @@ module Danger
       results = JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
       return if results.empty?
 
-      if inline_mode
+      # if inline_mode
         # TODO: Send inline comment
-      else
-        send_markdown_comment(results)
-      end
+      # else
+      send_markdown_comment(results)
     end
 
     def send_markdown_comment(results)
