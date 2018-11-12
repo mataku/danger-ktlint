@@ -1,6 +1,6 @@
 # danger-ktlint
 
-Lint kotlin files using ktlint command lint interface.
+Lint kotlin files only changed files in a pull request using ktlint command lint interface.
 
 ## Installation
 
