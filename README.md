@@ -17,8 +17,9 @@ You need to install `ktlint` command and set as executable first, see: https://k
 $ curl --output /usr/local/bin/ktlint -sL https://github.com/shyiko/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/loca/bin/ktlint
 ```
 
+Add this to Dangerfile.
+
 ```ruby
-# Dangerfile
 ktlint.lint
 ```
 
