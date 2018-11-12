@@ -14,10 +14,10 @@ module Danger
         return
       end
 
-      target = git.added_files + git.modified_files
-      return if target.empty?
+      targets = target_files(git.added_files + git.modified_files)
+      return if targets.empty?
 
-      results = JSON.parse(`ktlint #{target.join(' ')} --reporter=json --relative`)
+      results = JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
       return if results.empty?
 
       if inline_mode
@@ -35,6 +35,12 @@ module Danger
           fail(message)
         }
       }
+    end
+
+    def target_files(changed_files)
+      changed_files.select do |file|
+        file.end_with?('.kt')
+      end
     end
 
     private
