@@ -28,6 +28,22 @@ module Danger
       send_markdown_comment(results)
     end
 
+    # Comment to a PR by ktlint result json
+    #
+    # // Sample ktlint result
+    # [
+    #   {
+    #     "file": "app/src/main/java/com/mataku/Model.kt",
+    # 		"errors": [
+    # 			{
+    # 				"line": 46,
+    # 				"column": 1,
+    # 				"message": "Unexpected blank line(s) before \"}\"",
+    # 				"rule": "no-blank-line-before-rbrace"
+    # 			}
+    # 		]
+    # 	}
+    # ]
     def send_markdown_comment(results)
       results.each {|result|
         result['errors'].each {|error|
