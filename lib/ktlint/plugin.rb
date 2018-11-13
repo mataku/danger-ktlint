@@ -49,7 +49,7 @@ module Danger
       results.each {|result|
         result['errors'].each {|error|
           file = "#{result['file']}#L#{error['line']}"
-          message = "#{github.html_link(file)} has linter issue: #{error['message']}"
+          message = "#{github.html_link(file)}: #{error['message']}"
           fail(message)
         }
       }
