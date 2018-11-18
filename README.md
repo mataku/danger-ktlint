@@ -26,6 +26,10 @@ ktlint.lint
 ktlint.lint(inline_mode: true)
 ```
 
+## CHANGELOG
+
+See [CHANGELOG.md](https://github.com/mataku/danger-ktlint/blob/master/CHANGELOG.md).
+
 ## TODO
 
 - filtering: false (default: filtering: true behavior)
