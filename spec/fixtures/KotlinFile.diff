@@ -1,0 +1,38 @@
+diff --git a/spec/fixtures/KotlinFile.swift b/spec/fixtures/KotlinFile.swift
+index 0e18440..9dda539 100755
+--- a/spec/fixtures/KotlinFile.swift
++++ b/spec/fixtures/KotlinFile.swift
+@@ -10,10 +10,33 @@ module Danger
+        Line 0
+        Line 1
+        Line 2
+        Line 3
+
++       Line 5
++       Line 6
++
++       Line 7
++       Line 8
++       Line 9
++       Line 10
++       Line 11
++
++       Line 12
++       Line 13
++
++       Line 14
++       Line 15
++       Line 16
++       Line 17
++       Line 18
++       Line 19
++       Line 20
++       Line 21
++       Line 22
++       Line 23
++
+        Line 24
+        Line 25
+        Line 26
+        Line 27
+        Line 28

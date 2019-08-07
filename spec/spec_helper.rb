@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require "pathname"
-ROOT = Pathname.new(File.expand_path("../../", __FILE__))
+ROOT = Pathname.new(File.expand_path("..", __dir__))
 $:.unshift((ROOT + "lib").to_s)
 $:.unshift((ROOT + "spec").to_s)
 
@@ -9,7 +11,7 @@ require "pry"
 require "rspec"
 require "danger"
 
-if `git remote -v` == ''
+if `git remote -v` == ""
   puts "You cannot run tests without setting a local git remote on this repo"
   puts "It's a weird side-effect of Danger's internals."
   exit(0)
@@ -65,5 +67,5 @@ def testing_dangerfile
 end
 
 def dummy_ktlint_result
-  File.read(File.expand_path('../fixtures/ktlint_result.txt', __FILE__)).chomp
+  File.read(File.expand_path("fixtures/ktlint_result.txt", __dir__)).chomp
 end

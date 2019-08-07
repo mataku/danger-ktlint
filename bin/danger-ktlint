@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+if $PROGRAM_NAME == __FILE__
+  $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+end
+require 'thor'
+require 'version'
+
+# The class defining the CLI interface of the plugin.
+class DangerKtlintCLI < Thor
+  desc 'version', 'The version of the installed danger-ktlint plugin'
+  def version
+    puts DangerKtlint::VERSION
+  end
+
+  desc 'ktlint_version', 'The ktlint version used by the plugin'
+  def ktlint_version
+    puts DangerKtlint::KTLINT_VERSION
+  end
+end
+
+DangerKtlintCLI.start(ARGV)
