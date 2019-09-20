@@ -14,7 +14,7 @@ You need to install `ktlint` command and set as executable first, see: https://k
 
 ```bash
 # Example
-$ curl --output /usr/local/bin/ktlint -sL https://github.com/shyiko/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/loca/bin/ktlint
+$ curl --output /usr/local/bin/ktlint -sL https://github.com/pinterest/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/local/bin/ktlint
 ```
 
 Add this to Dangerfile.
