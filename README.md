@@ -26,6 +26,17 @@ ktlint.lint
 ktlint.lint(inline_mode: true)
 ```
 
+### Options
+#### Set maximum number of comments of ktlint results
+
+Default is `nil`, all comments are sent.
+
+```bash
+ktlint.limit = 3
+ktlint.lint
+```
+
+
 ## CHANGELOG
 
 See [CHANGELOG.md](https://github.com/mataku/danger-ktlint/blob/master/CHANGELOG.md).

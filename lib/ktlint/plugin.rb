@@ -2,8 +2,24 @@ require 'json'
 
 module Danger
   class DangerKtlint < Plugin
+    
+    class UnexpectedLimitTypeError < StandardError
+    end
+
     # TODO: Lint all files if `filtering: false`
     attr_accessor :filtering
+
+    def limit
+      @limit ||= nil
+    end
+
+    def limit=(limit)
+      if limit != nil && limit.integer?
+        @limit = limit
+      else
+        raise UnexpectedLimitTypeError
+      end
+    end
 
     # Run ktlint task using command line interface
     # Will fail if `ktlint` is not installed
@@ -46,22 +62,40 @@ module Danger
     # 	}
     # ]
     def send_markdown_comment(results)
-      results.each {|result|
-        result['errors'].each {|error|
-          file = "#{result['file']}#L#{error['line']}"
-          message = "#{github.html_link(file)}: #{error['message']}"
-          fail(message)
-        }
-      }
+      catch(:loop_break) do
+        count = 0
+        results.each do |result|
+          result['errors'].each do |error|
+            file = "#{result['file']}#L#{error['line']}"
+            message = "#{github.html_link(file)}: #{error['message']}"
+            fail(message)
+            unless limit.nil?
+              count += 1
+              if count >= limit
+                throw(:loop_break)
+              end
+            end
+          end
+        end
+      end
     end
 
     def send_inline_comments(results)
-      results.each do |result|
-        result['errors'].each do |error|
-          file = result['file']
-          message = error['message']
-          line = error['line']
-          fail(message, file: result['file'], line: line)
+      catch(:loop_break) do
+        count = 0
+        results.each do |result|
+          result['errors'].each do |error|
+            file = result['file']
+            message = error['message']
+            line = error['line']
+            fail(message, file: result['file'], line: line)
+            unless limit.nil?
+              count += 1
+              if count >= limit
+                throw(:loop_break)
+              end
+            end
+          end
         end
       end
     end
