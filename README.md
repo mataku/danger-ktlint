@@ -5,7 +5,7 @@ Lint kotlin files only changed files in a pull request using ktlint command lint
 ## Installation
 
 ```ruby
-$ gem install danger-ktlint
+gem install danger-ktlint
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ You need to install `ktlint` command and set as executable first, see: https://k
 
 ```bash
 # Example
-$ curl --output /usr/local/bin/ktlint -sL https://github.com/pinterest/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/local/bin/ktlint
+curl --output /usr/local/bin/ktlint -sL https://github.com/pinterest/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/local/bin/ktlint
 ```
 
 Add this to Dangerfile.
