@@ -23,35 +23,6 @@ module Danger
       end
     end
 
-    def ktlint_results
-      if skip_lint
-        # TODO: Allow XML
-        if report_file.nil? || report_file.empty?
-          fail("If skip_lint is specified, You must specify ktlint report json file with `ktlint.report_file=...` in your Dangerfile.")
-          return
-        end
-
-        unless File.exists?(report_file)
-          fail("Couldn't find ktlint result json file.\nYou must specify it with `ktlint.report_file=...` in your Dangerfile.")
-          return
-        end
-
-        File.open(report_file).each do |f|
-          JSON.load(f)
-        end
-      else
-        unless ktlint_exists?
-          fail("Couldn't find ktlint command. Install first.")
-          return
-        end
-
-        targets = target_files(git.added_files + git.modified_files)
-        return if targets.empty?
-
-        JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
-      end
-    end
-
     # Run ktlint task using command line interface
     # Will fail if `ktlint` is not installed
     # Skip lint task if files changed are empty
@@ -144,6 +115,35 @@ module Danger
 
     def ktlint_exists?
       system 'which ktlint > /dev/null 2>&1' 
+    end
+
+    def ktlint_results
+      if skip_lint
+        # TODO: Allow XML
+        if report_file.nil? || report_file.empty?
+          fail("If skip_lint is specified, You must specify ktlint report json file with `ktlint.report_file=...` in your Dangerfile.")
+          return
+        end
+
+        unless File.exists?(report_file)
+          fail("Couldn't find ktlint result json file.\nYou must specify it with `ktlint.report_file=...` in your Dangerfile.")
+          return
+        end
+
+        File.open(report_file).each do |f|
+          JSON.load(f)
+        end
+      else
+        unless ktlint_exists?
+          fail("Couldn't find ktlint command. Install first.")
+          return
+        end
+
+        targets = target_files(git.added_files + git.modified_files)
+        return if targets.empty?
+
+        JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
+      end
     end
   end
 end
