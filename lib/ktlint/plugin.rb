@@ -9,6 +9,8 @@ module Danger
     # TODO: Lint all files if `filtering: false`
     attr_accessor :filtering
 
+    attr_accessor :skip_lint, :report_file
+
     def limit
       @limit ||= nil
     end
@@ -18,6 +20,29 @@ module Danger
         @limit = limit
       else
         raise UnexpectedLimitTypeError
+      end
+    end
+
+    def ktlint_results
+      if skip_lint
+        unless File.exists?(report_file)
+          fail("Couldn't find ktlint result json file.\nYou should specify it with `ktlint.report_file=...` in your Dangerfile.")
+          return
+        end
+
+        File.open(report_file).each do |f|
+          JSON.load(f)
+        end
+      else
+        unless ktlint_exists?
+          fail("Couldn't find ktlint command. Install first.")
+          return
+        end
+
+        targets = target_files(git.added_files + git.modified_files)
+        return if targets.empty?
+
+        JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
       end
     end
 
@@ -32,11 +57,10 @@ module Danger
         return
       end
 
-      targets = target_files(git.added_files + git.modified_files)
-      return if targets.empty?
-
-      results = JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
-      return if results.empty?
+      results = ktlint_results
+      if results.nil? || results.empty?
+        return
+      end
 
       if inline_mode
         send_inline_comments(results)
@@ -66,7 +90,9 @@ module Danger
         count = 0
         results.each do |result|
           result['errors'].each do |error|
-            file = "#{result['file']}#L#{error['line']}"
+            file_path = result['file']
+            next unless @target_files.include?(file_path)
+            file = "#{file_path}#L#{error['line']}"
             message = "#{github.html_link(file)}: #{error['message']}"
             fail(message)
             unless limit.nil?
@@ -86,6 +112,8 @@ module Danger
         results.each do |result|
           result['errors'].each do |error|
             file = result['file']
+            next unless @target_files.include?(file)
+
             message = error['message']
             line = error['line']
             fail(message, file: result['file'], line: line)
@@ -101,7 +129,7 @@ module Danger
     end
 
     def target_files(changed_files)
-      changed_files.select do |file|
+      @target_files ||= changed_files.select do |file|
         file.end_with?('.kt')
       end
     end
