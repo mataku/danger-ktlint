@@ -26,8 +26,13 @@ module Danger
     def ktlint_results
       if skip_lint
         # TODO: Allow XML
+        if report_file.nil? || report_file.empty?
+          fail("If skip_lint is specified, You must specify ktlint report json file with `ktlint.report_file=...` in your Dangerfile.")
+          return
+        end
+
         unless File.exists?(report_file)
-          fail("Couldn't find ktlint result json file.\nYou should specify it with `ktlint.report_file=...` in your Dangerfile.")
+          fail("Couldn't find ktlint result json file.\nYou must specify it with `ktlint.report_file=...` in your Dangerfile.")
           return
         end
 
