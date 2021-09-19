@@ -34,15 +34,17 @@ module Danger
         return
       end
 
-      results = ktlint_results
+      targets = target_files(git.added_files + git.modified_files)
+
+      results = ktlint_results(targets)
       if results.nil? || results.empty?
         return
       end
 
       if inline_mode
-        send_inline_comments(results)
+        send_inline_comments(results, targets)
       else
-        send_markdown_comment(results)
+        send_markdown_comment(results, targets)
       end
     end
 
@@ -62,13 +64,13 @@ module Danger
     # 		]
     # 	}
     # ]
-    def send_markdown_comment(results)
+    def send_markdown_comment(results, targets)
       catch(:loop_break) do
         count = 0
         results.each do |result|
           result['errors'].each do |error|
             file_path = result['file']
-            next unless @target_files.include?(file_path)
+            next unless targets.include?(file_path)
             file = "#{file_path}#L#{error['line']}"
             message = "#{github.html_link(file)}: #{error['message']}"
             fail(message)
@@ -83,13 +85,13 @@ module Danger
       end
     end
 
-    def send_inline_comments(results)
+    def send_inline_comments(results, targets)
       catch(:loop_break) do
         count = 0
         results.each do |result|
           result['errors'].each do |error|
             file = result['file']
-            next unless @target_files.include?(file)
+            next unless targets.include?(file)
 
             message = error['message']
             line = error['line']
@@ -106,7 +108,7 @@ module Danger
     end
 
     def target_files(changed_files)
-      @target_files ||= changed_files.select do |file|
+      changed_files.select do |file|
         file.end_with?('.kt')
       end
     end
@@ -117,7 +119,7 @@ module Danger
       system 'which ktlint > /dev/null 2>&1' 
     end
 
-    def ktlint_results
+    def ktlint_results(targets)
       if skip_lint
         # TODO: Allow XML
         if report_file.nil? || report_file.empty?
@@ -130,7 +132,7 @@ module Danger
           return
         end
 
-        File.open(report_file).each do |f|
+        File.open(report_file) do |f|
           JSON.load(f)
         end
       else
@@ -139,7 +141,6 @@ module Danger
           return
         end
 
-        targets = target_files(git.added_files + git.modified_files)
         return if targets.empty?
 
         JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
