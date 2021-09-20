@@ -69,7 +69,7 @@ module Danger
         count = 0
         results.each do |result|
           result['errors'].each do |error|
-            file_path = result['file']
+            file_path = relative_file_path(result['file'])
             next unless targets.include?(file_path)
             file = "#{file_path}#L#{error['line']}"
             message = "#{github.html_link(file)}: #{error['message']}"
@@ -90,8 +90,8 @@ module Danger
         count = 0
         results.each do |result|
           result['errors'].each do |error|
-            file = result['file']
-            next unless targets.include?(file)
+            file_path = relative_file_path(result['file'])
+            next unless targets.include?(file_path)
 
             message = error['message']
             line = error['line']
@@ -111,6 +111,12 @@ module Danger
       changed_files.select do |file|
         file.end_with?('.kt')
       end
+    end
+
+    # Make it a relative path so it can compare it to git.added_files
+    def relative_file_path(file_path)
+      pwd = `pwd`.chomp
+      file_path.gsub(/#{pwd}\//, '')
     end
 
     private
