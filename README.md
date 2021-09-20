@@ -36,7 +36,6 @@ ktlint.limit = 3
 ktlint.lint
 ```
 
-
 ## CHANGELOG
 
 See [CHANGELOG.md](https://github.com/mataku/danger-ktlint/blob/master/CHANGELOG.md).
@@ -44,6 +43,7 @@ See [CHANGELOG.md](https://github.com/mataku/danger-ktlint/blob/master/CHANGELOG
 ## TODO
 
 - filtering: false (default: filtering: true behavior)
+- XML report_file (Currently only JSON is supported.)
 
 ## Development
 

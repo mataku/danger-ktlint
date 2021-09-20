@@ -1,11 +1,16 @@
-## 0.3.0
+## 0.0.4
+
+### Added
+- ktlint task can be skipped by specifing `ktlint.skip_task = true` and `ktlint.report_file = '...'`
+
+## 0.0.3
 ### Added
 - `limit` parameter to set the maximum number of comments of ktlint results.
 
-## 0.2.0
+## 0.0.2
 ### Added
 - Inline comment feature (`inline_mode: true` with ktlint.lint)
 
-## 0.1.0
+## 0.0.1
 ### Added
 - Run ktlint by ktlint.lint
