@@ -9,6 +9,10 @@ module Danger
       expect(Danger::DangerKtlint.new(nil)).to be_a Danger::Plugin
     end
 
+    before do
+      allow_any_instance_of(Kernel).to receive(:`).with('pwd').and_return('/home/mataku')
+    end
+
     describe '#lint' do
       before do
         allow_any_instance_of(Danger::DangerfileGitPlugin).to receive(:added_files).and_return(['app/src/main/java/com/mataku/Model.kt'])
