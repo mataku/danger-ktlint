@@ -115,11 +115,14 @@ module Danger
 
     # Make it a relative path so it can compare it to git.added_files
     def relative_file_path(file_path)
-      pwd = `pwd`.chomp
       file_path.gsub(/#{pwd}\//, '')
     end
 
     private
+
+    def pwd
+      @pwd ||= `pwd`.chomp
+    end
 
     def ktlint_exists?
       system 'which ktlint > /dev/null 2>&1' 
