@@ -1,7 +1,7 @@
 ## 0.0.4
 
 ### Added
-- ktlint task can be skipped by specifing `ktlint.skip_task = true` and `ktlint.report_file = '...'`
+- ktlint task can be skipped by specifing `ktlint.skip_lint = true` and `ktlint.report_file = '...'`
 
 ## 0.0.3
 ### Added
