@@ -29,11 +29,6 @@ module Danger
     # @return [void]
     # def lint(inline_mode: false)
     def lint(inline_mode: false)
-      unless ktlint_exists?
-        fail("Couldn't find ktlint command. Install first.")
-        return
-      end
-
       targets = target_files(git.added_files + git.modified_files)
 
       results = ktlint_results(targets)
