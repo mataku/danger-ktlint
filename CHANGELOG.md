@@ -1,3 +1,9 @@
+## 0.0.5
+
+### Fixed
+
+- Fixed to not check ktlint binary even when skip_task is specified.
+
 ## 0.0.4
 
 ### Added
