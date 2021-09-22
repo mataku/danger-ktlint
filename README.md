@@ -12,6 +12,8 @@ gem install danger-ktlint
 
 You need to install `ktlint` command and set as executable first, see: https://ktlint.github.io/#getting-started.
 
+If you want to skip ktlint task, for example to only comment on the results of ktlint, no need to install ktlint. See https://github.com/mataku/danger-ktlint#skip-ktlint-task.
+
 ```bash
 # Example
 curl --output /usr/local/bin/ktlint -sL https://github.com/pinterest/ktlint/releases/download/$KTLINT_VERSION/ktlint && chmod a+x /usr/local/bin/ktlint
@@ -55,6 +57,7 @@ See [CHANGELOG.md](https://github.com/mataku/danger-ktlint/blob/master/CHANGELOG
 
 - filtering: false (default: filtering: true behavior)
 - Allow plain or html report_file (Currently only JSON is supported.)
+- Install ktlint and use it if ktlint binary does not exist
 
 ## Development
 
