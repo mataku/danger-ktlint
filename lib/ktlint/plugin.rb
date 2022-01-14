@@ -83,7 +83,6 @@ module Danger
                    else
                      file_path
                    end
-            # `eval` may be dangerous, but it does not accept any input because it accepts only defined as danger.scm_provider
             message = "#{scm_provider.html_link(file)}: #{error['message']}"
             fail(message)
             unless limit.nil?
@@ -131,6 +130,7 @@ module Danger
 
     private
 
+    # `eval` may be dangerous, but it does not accept any input because it accepts only defined as danger.scm_provider
     def scm_provider
       @scm_provider ||= eval(danger.scm_provider.to_s)
     end
