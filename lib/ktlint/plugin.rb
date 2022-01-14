@@ -78,7 +78,7 @@ module Danger
           result['errors'].each do |error|
             file_path = relative_file_path(result['file'])
             next unless targets.include?(file_path)
-            file = if scm_provider == :github
+            file = if danger.scm_provider == :github
                      "#{file_path}#L#{error['line']}"
                    else
                      file_path
