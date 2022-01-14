@@ -1,10 +1,18 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module Danger
   class DangerKtlint < Plugin
-    
-    class UnexpectedLimitTypeError < StandardError
+    class UnexpectedLimitTypeError < StandardError; end
+
+    class UnsupportedServiceError < StandardError
+      def initialize(message = 'Unsupported service! Currently supported services are GitHub, GitLab and BitBucket server.')
+        super(message)
+      end
     end
+
+    AVAILABLE_SERVICES = [:github, :gitlab, :bitbucket_server]
 
     # TODO: Lint all files if `filtering: false`
     attr_accessor :filtering
@@ -29,6 +37,10 @@ module Danger
     # @return [void]
     # def lint(inline_mode: false)
     def lint(inline_mode: false)
+      unless supported_service?
+        raise UnsupportedServiceError.new
+      end
+
       targets = target_files(git.added_files + git.modified_files)
 
       results = ktlint_results(targets)
@@ -66,8 +78,8 @@ module Danger
           result['errors'].each do |error|
             file_path = relative_file_path(result['file'])
             next unless targets.include?(file_path)
-            file = "#{file_path}#L#{error['line']}"
-            message = "#{github.html_link(file)}: #{error['message']}"
+
+            message = "#{file_html_link(file_path, error['line'])}: #{error['message']}"
             fail(message)
             unless limit.nil?
               count += 1
@@ -87,7 +99,6 @@ module Danger
           result['errors'].each do |error|
             file_path = relative_file_path(result['file'])
             next unless targets.include?(file_path)
-
             message = error['message']
             line = error['line']
             fail(message, file: result['file'], line: line)
@@ -114,6 +125,20 @@ module Danger
     end
 
     private
+
+    def file_html_link(file_path, line_number)
+      file = if danger.scm_provider == :github
+               "#{file_path}#L#{line_number}"
+             else
+               file_path
+             end
+      scm_provider_klass.html_link(file)
+    end
+
+    # `eval` may be dangerous, but it does not accept any input because it accepts only defined as danger.scm_provider
+    def scm_provider_klass
+      @scm_provider_klass ||= eval(danger.scm_provider.to_s)
+    end
 
     def pwd
       @pwd ||= `pwd`.chomp
@@ -149,6 +174,10 @@ module Danger
 
         JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
       end
+    end
+
+    def supported_service?
+      AVAILABLE_SERVICES.include?(danger.scm_provider.to_sym)
     end
   end
 end
