@@ -78,12 +78,8 @@ module Danger
           result['errors'].each do |error|
             file_path = relative_file_path(result['file'])
             next unless targets.include?(file_path)
-            file = if danger.scm_provider == :github
-                     "#{file_path}#L#{error['line']}"
-                   else
-                     file_path
-                   end
-            message = "#{scm_provider.html_link(file)}: #{error['message']}"
+
+            message = "#{file_html_link(file_path, error['line'])}: #{error['message']}"
             fail(message)
             unless limit.nil?
               count += 1
@@ -130,9 +126,18 @@ module Danger
 
     private
 
+    def file_html_link(file_path, line_number)
+      file = if danger.scm_provider == :github
+               "#{file_path}#L#{line_number}"
+             else
+               file_path
+             end
+      scm_provider_klass.html_link(file)
+    end
+
     # `eval` may be dangerous, but it does not accept any input because it accepts only defined as danger.scm_provider
-    def scm_provider
-      @scm_provider ||= eval(danger.scm_provider.to_s)
+    def scm_provider_klass
+      @scm_provider_klass ||= eval(danger.scm_provider.to_s)
     end
 
     def pwd
