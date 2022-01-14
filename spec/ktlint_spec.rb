@@ -11,6 +11,7 @@ module Danger
 
     before do
       allow_any_instance_of(Kernel).to receive(:`).with('pwd').and_return('/home/mataku')
+      allow_any_instance_of(Kernel).to receive(:`).with('which less').and_return(0)
     end
 
     describe '#lint' do
@@ -55,6 +56,22 @@ module Danger
           expect(dangerfile.status_report[:errors].size).to eq(2)
         end
       end
+
+      context 'GitLab' do
+        let(:dangerfile) { testing_dangerfile_for_gitlab }
+
+        before do
+          allow_any_instance_of(Kernel).to receive(:system).with('which ktlint > /dev/null 2>&1').and_return(true)
+          allow_any_instance_of(Kernel).to receive(:`).with('ktlint app/src/main/java/com/mataku/Model.kt --reporter=json --relative').and_return(dummy_ktlint_result)
+          allow_any_instance_of(Danger::DangerfileGitLabPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+          allow_any_instance_of(Danger::DangerfileGitLabPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+        end
+
+        it do
+          plugin.lint
+          expect(dangerfile.status_report[:errors].size).to eq(2)
+        end
+      end
     end
 
     describe '#limit' do
@@ -66,7 +83,7 @@ module Danger
 
       context 'integer value is set to limit' do
         it 'raises no errors' do
-          expect { plugin.limit = 1 }.not_to raise_error(DangerKtlint::UnexpectedLimitTypeError)
+          expect { plugin.limit = 1 }.not_to raise_error
         end
       end
     end
