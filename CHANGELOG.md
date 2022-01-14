@@ -1,3 +1,7 @@
+## Unreleased
+
+- Support GitLab and BitBucket server
+
 ## 0.0.5
 
 ### Fixed
