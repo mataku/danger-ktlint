@@ -1,6 +1,6 @@
 ## Unreleased
 
-- Support GitLab and BitBucket server
+- Support GitLab and BitBucket server even if `inline_mode: false` is specified.
 
 ## 0.0.5
 
