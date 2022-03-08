@@ -1,0 +1,19 @@
+[
+	{
+		"file": "app/src/main/java/com/mataku/Model2.kt",
+		"errors": [
+			{
+				"line": 46,
+				"column": 1,
+				"message": "Unexpected blank line(s) before \"}\"",
+				"rule": "no-blank-line-before-rbrace"
+			},
+		  {
+				"line": 47,
+				"column": 1,
+				"message": "Unexpected blank line(s) before \"}\"",
+				"rule": "no-blank-line-before-rbrace"
+			}
+		]
+	}
+]

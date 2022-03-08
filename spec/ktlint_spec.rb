@@ -107,5 +107,46 @@ module Danger
         end
       end
     end
+
+    describe '#skip_lint' do
+      context 'skip_lint: true' do
+        before do
+          allow_any_instance_of(Danger::DangerfileGitPlugin).to receive(:added_files).and_return(['app/src/main/java/com/mataku/Model.kt'])
+          allow_any_instance_of(Danger::DangerfileGitPlugin).to receive(:modified_files).and_return([])
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt#L46').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt#L47').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+ 
+          allow(plugin).to receive(:system).with('which ktlint > /dev/null 2>&1').and_return(true)
+          plugin.report_file = './spec/fixtures/ktlint_result.json'
+          plugin.skip_lint = true
+        end
+
+        it do
+          expect(plugin).not_to have_received(:system).with('which ktlint > /dev/null 2>&1')
+          plugin.lint(inline_mode: false)
+        end
+      end
+
+      context 'report_files_pattern is specified' do
+        before do
+          allow_any_instance_of(Danger::DangerfileGitPlugin).to receive(:added_files).and_return(['app/src/main/java/com/mataku/Model.kt', 'app/src/main/java/com/mataku/Model2.kt'])
+          allow_any_instance_of(Danger::DangerfileGitPlugin).to receive(:modified_files).and_return([])
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt#L46').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model.kt#L47').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model.kt'>Model.kt</a>")
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model2.kt#L46').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model2.kt'>Model2.kt</a>")
+          allow_any_instance_of(Danger::DangerfileGitHubPlugin).to receive(:html_link).with('app/src/main/java/com/mataku/Model2.kt#L47').and_return("<a href='https://gitlab.com/mataku/android/blob/561827e46167077b5e53515b4b7349b8ae04610b/Model2.kt'>Model2.kt</a>")
+          #
+          allow(plugin).to receive(:system).with('which ktlint > /dev/null 2>&1').and_return(true)
+          plugin.report_files_pattern = "**/ktlint_result*.json"
+          plugin.skip_lint = true
+        end
+
+        it do
+          expect(plugin).not_to have_received(:system).with('which ktlint > /dev/null 2>&1')
+          plugin.lint(inline_mode: false)
+          expect(dangerfile.status_report[:errors].size).to eq(4)
+        end
+      end
+    end
   end
 end
