@@ -46,6 +46,8 @@ Default is false.
 ktlint.skip_lint = true
 # If skip_lint is specified, report_file must also be specified.
 ktlint.report_file = 'result.json'
+# If you use ktlint in multiple modules app, you can specify multiple ktlint result json.
+# ktlint.report_files_pattern = '**/result.json'
 ktlint.lint
 ```
 
