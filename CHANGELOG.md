@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.0.7
+
+- Support multiple ktlint result json.
+
 ## 0.0.6
 
 - Support GitLab and BitBucket server even if `inline_mode: false` is specified.
