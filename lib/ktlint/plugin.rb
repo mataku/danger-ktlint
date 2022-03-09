@@ -17,7 +17,7 @@ module Danger
     # TODO: Lint all files if `filtering: false`
     attr_accessor :filtering
 
-    attr_accessor :skip_lint, :report_file
+    attr_accessor :skip_lint, :report_file, :report_files_pattern
 
     def limit
       @limit ||= nil
@@ -57,7 +57,7 @@ module Danger
 
     # Comment to a PR by ktlint result json
     #
-    # // Sample ktlint result
+    # // Sample single ktlint result
     # [
     #   {
     #     "file": "app/src/main/java/com/mataku/Model.kt",
@@ -71,20 +71,22 @@ module Danger
     # 		]
     # 	}
     # ]
-    def send_markdown_comment(results, targets)
+    def send_markdown_comment(ktlint_results, targets)
       catch(:loop_break) do
         count = 0
-        results.each do |result|
-          result['errors'].each do |error|
-            file_path = relative_file_path(result['file'])
-            next unless targets.include?(file_path)
+        ktlint_results.each do |ktlint_result|
+          ktlint_result.each do |result|
+            result['errors'].each do |error|
+              file_path = relative_file_path(result['file'])
+              next unless targets.include?(file_path)
 
-            message = "#{file_html_link(file_path, error['line'])}: #{error['message']}"
-            fail(message)
-            unless limit.nil?
-              count += 1
-              if count >= limit
-                throw(:loop_break)
+              message = "#{file_html_link(file_path, error['line'])}: #{error['message']}"
+              fail(message)
+              unless limit.nil?
+                count += 1
+                if count >= limit
+                  throw(:loop_break)
+                end
               end
             end
           end
@@ -92,20 +94,22 @@ module Danger
       end
     end
 
-    def send_inline_comments(results, targets)
+    def send_inline_comments(ktlint_results, targets)
       catch(:loop_break) do
         count = 0
-        results.each do |result|
-          result['errors'].each do |error|
-            file_path = relative_file_path(result['file'])
-            next unless targets.include?(file_path)
-            message = error['message']
-            line = error['line']
-            fail(message, file: result['file'], line: line)
-            unless limit.nil?
-              count += 1
-              if count >= limit
-                throw(:loop_break)
+        ktlint_results.each do |ktlint_result|
+          ktlint_result.each do |result|
+            result['errors'].each do |error|
+              file_path = relative_file_path(result['file'])
+              next unless targets.include?(file_path)
+              message = error['message']
+              line = error['line']
+              fail(message, file: result['file'], line: line)
+              unless limit.nil?
+                count += 1
+                if count >= limit
+                  throw(:loop_break)
+                end
               end
             end
           end
@@ -151,18 +155,10 @@ module Danger
     def ktlint_results(targets)
       if skip_lint
         # TODO: Allow XML
-        if report_file.nil? || report_file.empty?
-          fail("If skip_lint is specified, You must specify ktlint report json file with `ktlint.report_file=...` in your Dangerfile.")
-          return
-        end
-
-        unless File.exists?(report_file)
-          fail("Couldn't find ktlint result json file.\nYou must specify it with `ktlint.report_file=...` in your Dangerfile.")
-          return
-        end
-
-        File.open(report_file) do |f|
-          JSON.load(f)
+        ktlint_result_files.map do |file|
+          File.open(file) do |f|
+            JSON.load(f)
+          end
         end
       else
         unless ktlint_exists?
@@ -172,12 +168,22 @@ module Danger
 
         return if targets.empty?
 
-        JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)
+        [JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)]
       end
     end
 
     def supported_service?
       AVAILABLE_SERVICES.include?(danger.scm_provider.to_sym)
+    end
+
+    def ktlint_result_files
+      if !report_file.nil? && !report_file.empty? && File.exists?(report_file)
+        [report_file]
+      elsif !report_files_pattern.nil? && !report_files_pattern.empty?
+        Dir.glob(report_files_pattern)
+      else
+        fail("Couldn't find ktlint result json file.\nYou must specify it with `ktlint.report_file=...` or `ktlint.report_files_pattern=...` in your Dangerfile.")
+      end
     end
   end
 end

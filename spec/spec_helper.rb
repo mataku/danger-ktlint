@@ -76,5 +76,11 @@ def testing_dangerfile_for_gitlab
 end
 
 def dummy_ktlint_result
-  File.read(File.expand_path('../fixtures/ktlint_result.txt', __FILE__)).chomp
+  File.read(File.expand_path('../fixtures/ktlint_result.json', __FILE__)).chomp
 end
+
+def dummy_ktlint_result_2
+  File.read(File.expand_path('../fixtures/ktlint_result_2.json', __FILE__)).chomp
+end
+
+
