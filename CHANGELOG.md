@@ -2,7 +2,7 @@
 
 ## 0.0.7
 
-- Support multiple ktlint result json.
+- Support multiple ktlint result json by `ktlint.report_files_pattern = '...'`. e.g. `ktlint.report_files_pattern = '**/report.json'
 
 ## 0.0.6
 
