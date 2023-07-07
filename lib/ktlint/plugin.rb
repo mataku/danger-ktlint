@@ -168,7 +168,7 @@ module Danger
 
         return if targets.empty?
 
-        [JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative`)]
+        [JSON.parse(`ktlint #{targets.join(' ')} --reporter=json --relative --log-level=none`)]
       end
     end
 
