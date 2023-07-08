@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.0.8
+- Fix log format - [@DavidBertet](https://github.com/DavidBertet) [#14](https://github.com/mataku/danger-ktlint/pull/14)
+- Fix unit tests
+
 ## 0.0.7
 
 - Support multiple ktlint result json by `ktlint.report_files_pattern = '...'`. e.g. `ktlint.report_files_pattern = '**/report.json'
