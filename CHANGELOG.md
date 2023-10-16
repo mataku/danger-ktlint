@@ -1,5 +1,9 @@
 ## Unreleased
 
+
+## 0.0.9
+- Support Ruby 3.2 [#17](https://github.com/mataku/danger-ktlint/pull/17)
+
 ## 0.0.8
 - Fix log format - [@DavidBertet](https://github.com/DavidBertet) [#14](https://github.com/mataku/danger-ktlint/pull/14)
 - Fix unit tests
