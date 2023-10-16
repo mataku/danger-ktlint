@@ -177,7 +177,7 @@ module Danger
     end
 
     def ktlint_result_files
-      if !report_file.nil? && !report_file.empty? && File.exists?(report_file)
+      if !report_file.nil? && !report_file.empty? && File.exist?(report_file)
         [report_file]
       elsif !report_files_pattern.nil? && !report_files_pattern.empty?
         Dir.glob(report_files_pattern)
